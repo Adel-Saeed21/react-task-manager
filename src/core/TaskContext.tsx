@@ -22,20 +22,23 @@ interface TaskContextType {
 const TaskContext = createContext<TaskContextType | null>(null);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const [taskList, setTaskList] = useState<TaskType[]>([
-   
-  ]);
+  const [taskList, setTaskList] = useState<TaskType[]>(() => {
+  const savedTasks = localStorage.getItem('tasks');
+  return savedTasks ? JSON.parse(savedTasks) : [];
+});
 
   const [filter, setFilter] = useState<FilterType>('all');
 
   function addTask(title: string, body: string) {
     setTaskList(prev => [...prev, { id: prev.length + 1, title, body, done: false }]);
+    localStorage.setItem('tasks', JSON.stringify(taskList));
   }
 
   function editTask(id: number, title: string, body: string) {
     setTaskList(prev => prev.map(task =>
       task.id === id ? { ...task, title, body } : task
     ));
+    localStorage.setItem('tasks', JSON.stringify(taskList));
   }
 
   function deleteTask(id: number) {
