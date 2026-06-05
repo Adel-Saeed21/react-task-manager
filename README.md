@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# ✅ React Task Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Todo List application built with **React** + **TypeScript** + **Vite**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🧠 Concepts & Hooks Used
 
-## React Compiler
+### `useState`
+Used to manage local component state such as the list of tasks, input field values, current page index, and modal visibility.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```tsx
+const [tasks, setTasks] = useState<Task[]>([]);
+const [currentPage, setCurrentPage] = useState(1);
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### `useContext`
+Used to share global state (e.g. task list, theme) across deeply nested components without prop drilling.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Props
+Components communicate via props — parent components pass data and callback functions down to children.
+
+```tsx
+<TaskCard task={task} onDelete={handleDelete} onEdit={handleEdit} />
 ```
+
+### Pagination
+Tasks are split into pages to avoid rendering a large list at once. Only the current page slice is displayed.
+
+```tsx
+const paginated = tasks.slice(
+  (currentPage - 1) * ITEMS_PER_PAGE,
+  currentPage * ITEMS_PER_PAGE
+);
+```
+
+---
+
+## 🗂️ Project Structure
+
+```
+src/
+├── components/
+│   ├── add_new_task/     # Form to add a new task
+│   ├── edit_task/        # Form to edit an existing task
+│   ├── task/             # Single task card component
+│   ├── task_list/        # Paginated list of tasks
+│   ├── todo_container/   # Main wrapper (holds context provider)
+│   └── top_nav_bar/      # Navigation bar
+├── core/                 # Context, reducer, types
+├── App.tsx
+└── main.tsx
+```
+
+---
+
+## 🚀 Getting Started
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| React 18 | UI library |
+| TypeScript | Type safety |
+| Vite | Build tool & dev server |
+| CSS Modules | Component-scoped styles |
+| localStorage | Task persistence |

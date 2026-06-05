@@ -23,12 +23,7 @@ const TaskContext = createContext<TaskContextType | null>(null);
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [taskList, setTaskList] = useState<TaskType[]>([
-    {
-      id: 1,
-      title: "Sample Task",
-      body: "This is a sample task. Click the 'Add New Task' button to create your own tasks!",
-      done: true
-    }
+   
   ]);
 
   const [filter, setFilter] = useState<FilterType>('all');
