@@ -8,11 +8,14 @@ import {
 import TaskActionButtons from "./TaskActionButtons";
 import { cardStyle, titleRowStyle, bodyTextStyle } from "./task.style";
 
-export default function Task() {
-  const task = {
-    title: "Learn React",
-    body: "Learn React, TypeScript, and Material UI to build modern web applications. Practice by creating projects like Todo Apps, Dashboards, and E-commerce applications.",
-  };
+type TaskProps={
+    id:number,
+    title:string,
+    body:string
+    done?:boolean
+}
+export default function Task(props:TaskProps) {
+
 
   return (
     <Card sx={cardStyle}>
@@ -20,7 +23,7 @@ export default function Task() {
 
         <Box sx={titleRowStyle}>
           <Typography variant="h6">
-            {task.title}
+            {props.title}
           </Typography>
 
           <TaskActionButtons />
@@ -31,7 +34,7 @@ export default function Task() {
           color="text.secondary"
           sx={bodyTextStyle}
         >
-          {task.body}
+          {props.body}
         </Typography>
 
       </CardContent>
