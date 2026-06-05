@@ -7,8 +7,12 @@ interface TaskType {
   done?: boolean;
 }
 
+type FilterType = 'all' | 'done' | 'undone';
+
 interface TaskContextType {
   taskList: TaskType[];
+  filter: FilterType;
+  setFilter: (filter: FilterType) => void;
   addTask: (title: string, body: string) => void;
   deleteTask: (id: number) => void;
   toggleDone: (id: number) => void;
@@ -27,28 +31,30 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     }
   ]);
 
+  const [filter, setFilter] = useState<FilterType>('all');
+
   function addTask(title: string, body: string) {
-    setTaskList([...taskList, { id: taskList.length + 1, title, body, done: false }]);
+    setTaskList(prev => [...prev, { id: prev.length + 1, title, body, done: false }]);
   }
 
   function editTask(id: number, title: string, body: string) {
-    setTaskList(taskList.map(task =>
+    setTaskList(prev => prev.map(task =>
       task.id === id ? { ...task, title, body } : task
     ));
   }
 
   function deleteTask(id: number) {
-    setTaskList(taskList.filter(task => task.id !== id));
+    setTaskList(prev => prev.filter(task => task.id !== id));
   }
 
   function toggleDone(id: number) {
-    setTaskList(taskList.map(task =>
+    setTaskList(prev => prev.map(task =>
       task.id === id ? { ...task, done: !task.done } : task
     ));
   }
 
   return (
-    <TaskContext.Provider value={{ taskList, addTask, deleteTask, toggleDone, editTask }}>
+    <TaskContext.Provider value={{ taskList, filter, setFilter, addTask, deleteTask, toggleDone, editTask }}>
       {children}
     </TaskContext.Provider>
   );
