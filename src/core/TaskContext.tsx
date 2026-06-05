@@ -28,29 +28,33 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
 });
 
   const [filter, setFilter] = useState<FilterType>('all');
+function addTask(title: string, body: string) {
+  const newList = [...taskList, { id: taskList.length + 1, title, body, done: false }];
+  setTaskList(newList);
+  localStorage.setItem('tasks', JSON.stringify(newList));
+}
 
-  function addTask(title: string, body: string) {
-    setTaskList(prev => [...prev, { id: prev.length + 1, title, body, done: false }]);
-    localStorage.setItem('tasks', JSON.stringify(taskList));
-  }
+function editTask(id: number, title: string, body: string) {
+  const newList = taskList.map(task =>
+    task.id === id ? { ...task, title, body } : task
+  );
+  setTaskList(newList);
+  localStorage.setItem('tasks', JSON.stringify(newList));
+}
 
-  function editTask(id: number, title: string, body: string) {
-    setTaskList(prev => prev.map(task =>
-      task.id === id ? { ...task, title, body } : task
-    ));
-    localStorage.setItem('tasks', JSON.stringify(taskList));
-  }
+function deleteTask(id: number) {
+  const newList = taskList.filter(task => task.id !== id);
+  setTaskList(newList);
+  localStorage.setItem('tasks', JSON.stringify(newList)); 
+}
 
-  function deleteTask(id: number) {
-    setTaskList(prev => prev.filter(task => task.id !== id));
-  }
-
-  function toggleDone(id: number) {
-    setTaskList(prev => prev.map(task =>
-      task.id === id ? { ...task, done: !task.done } : task
-    ));
-  }
-
+function toggleDone(id: number) {
+  const newList = taskList.map(task =>
+    task.id === id ? { ...task, done: !task.done } : task
+  );
+  setTaskList(newList);
+  localStorage.setItem('tasks', JSON.stringify(newList)); 
+}
   return (
     <TaskContext.Provider value={{ taskList, filter, setFilter, addTask, deleteTask, toggleDone, editTask }}>
       {children}
