@@ -3,10 +3,10 @@ const theme = createTheme({
     palette: {
   mode: "light",
     primary: {
-        main: "#2563EB", // Blue
+        main: "#2563EB", 
     },
     secondary: {
-        main: "#7C3AED", // Violet
+        main: "#7C3AED", 
     },
     success: {
         main: "#16A34A",

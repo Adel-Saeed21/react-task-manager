@@ -1,17 +1,15 @@
 import Task from '../task/Task'
 import './TaskListStyle.css'
+import { useTaskContext } from '../../core/TaskContext';
 interface TaskType {
   id: number;
   title: string;
   body: string;
+  done?: boolean;
 }
 
-interface TaskListProps {
-  taskList: TaskType[];
-}
-
-export default function TaskList({ taskList }: TaskListProps) {
-
+export default function TaskList() {
+    const { taskList, deleteTask, toggleDone } = useTaskContext();
     if (taskList.length === 0) {
         return (
 <div className="taskContainer"> 
@@ -23,7 +21,9 @@ export default function TaskList({ taskList }: TaskListProps) {
         return (
         <div className="taskContainer-with-tasks">               
                     {taskList.map((task: TaskType) => (
-                    <Task key={task.id} id={task.id} title={task.title} body={task.body} />
+                    <Task key={task.id} id={task.id} title={task.title} body={task.body} isDone={task.done!} onDelete={() =>deleteTask(task.id)} onDone={() => 
+                        toggleDone(task.id)
+                    } />
                 ))}
         </div>
         );
