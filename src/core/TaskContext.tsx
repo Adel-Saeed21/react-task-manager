@@ -10,28 +10,29 @@ interface TaskType {
 type FilterType = 'all' | 'done' | 'undone';
 
 interface TaskContextType {
-  taskList: TaskType[];
-  filter: FilterType;
-  setFilter: (filter: FilterType) => void;
-  addTask: (title: string, body: string) => void;
-  deleteTask: (id: number) => void;
-  toggleDone: (id: number) => void;
-  editTask: (id: number, title: string, body: string) => void;
+        taskList: TaskType[];
+        filter: FilterType;
+        setFilter: (filter: FilterType) => void;
+        addTask: (title: string, body: string) => void;
+        deleteTask: (id: number) => void;
+        toggleDone: (id: number) => void;
+        editTask: (id: number, title: string, body: string) => void;
 }
 
 const TaskContext = createContext<TaskContextType | null>(null);
 
+
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const [taskList, setTaskList] = useState<TaskType[]>(() => {
-  const savedTasks = localStorage.getItem('tasks');
-  return savedTasks ? JSON.parse(savedTasks) : [];
+        const [taskList, setTaskList] = useState<TaskType[]>(() => {
+        const savedTasks = localStorage.getItem('tasks');
+        return savedTasks ? JSON.parse(savedTasks) : [];
 });
 
-  const [filter, setFilter] = useState<FilterType>('all');
+const [filter, setFilter] = useState<FilterType>('all');
 function addTask(title: string, body: string) {
-  const newList = [...taskList, { id: taskList.length + 1, title, body, done: false }];
-  setTaskList(newList);
-  localStorage.setItem('tasks', JSON.stringify(newList));
+        const newList = [...taskList, { id: taskList.length + 1, title, body, done: false }];
+        setTaskList(newList);
+        localStorage.setItem('tasks', JSON.stringify(newList));
 }
 
 function editTask(id: number, title: string, body: string) {
