@@ -14,23 +14,18 @@ interface TaskType {
 const TASKS_PER_PAGE = 3;
 
 export default function TaskList() {
-  const { taskList, deleteTask, toggleDone, filter } = useTaskContext();
+  const { filteredTasks, deleteTask, toggleDone } = useTaskContext();
   const [page, setPage] = useState(1);
 
-  const filteredList = taskList.filter(task => {
-    if (filter === 'done') return task.done === true;
-    if (filter === 'undone') return task.done === false;
-    return true;
-  });
+  const totalPages = Math.ceil(filteredTasks.length / TASKS_PER_PAGE);
+  const currentPage = Math.min(page, totalPages) || 1;
 
-  const totalPages = Math.ceil(filteredList.length / TASKS_PER_PAGE);
-
-  const paginatedList = filteredList.slice(
-    (page - 1) * TASKS_PER_PAGE,
-    page * TASKS_PER_PAGE
+  const paginatedList = filteredTasks.slice(
+    (currentPage - 1) * TASKS_PER_PAGE,
+    currentPage * TASKS_PER_PAGE
   );
 
-  if (filteredList.length === 0) {
+  if (filteredTasks.length === 0) {
     return (
       <div className="taskContainer">
         <h2>No tasks available</h2>
@@ -52,27 +47,27 @@ export default function TaskList() {
           onDone={() => toggleDone(task.id)}
         />
       ))}
-     <Pagination
-  count={totalPages}
-  page={page}
-  onChange={(_e, value) => setPage(value)}
-  variant="outlined"
-  color="primary"
-  sx={{
-    '& .MuiPaginationItem-root': {
-      color: 'white',
-      borderColor: 'white',
-    },
-    '& .MuiPaginationItem-root.Mui-selected': {
-      backgroundColor: 'white',
-      color: '#2d6a5a',
-      borderColor: 'white',
-    },
-    '& .MuiPaginationItem-root:hover': {
-      backgroundColor: 'rgba(255,255,255,0.2)',
-    },
-  }}
-/>
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={(_e, value) => setPage(value)}
+        variant="outlined"
+        color="primary"
+        sx={{
+          '& .MuiPaginationItem-root': {
+            color: 'white',
+            borderColor: 'white',
+          },
+          '& .MuiPaginationItem-root.Mui-selected': {
+            backgroundColor: 'white',
+            color: '#2d6a5a',
+            borderColor: 'white',
+          },
+          '& .MuiPaginationItem-root:hover': {
+            backgroundColor: 'rgba(255,255,255,0.2)',
+          },
+        }}
+      />
     </div>
   );
 }

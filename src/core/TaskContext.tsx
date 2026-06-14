@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState , useMemo} from 'react'
 
 interface TaskType {
   id: number;
@@ -9,6 +9,7 @@ interface TaskType {
 
 type FilterType = 'all' | 'done' | 'undone';
 
+
 interface TaskContextType {
         taskList: TaskType[];
         filter: FilterType;
@@ -17,6 +18,7 @@ interface TaskContextType {
         deleteTask: (id: number) => void;
         toggleDone: (id: number) => void;
         editTask: (id: number, title: string, body: string) => void;
+        filteredTasks: TaskType[];
 }
 
 const TaskContext = createContext<TaskContextType | null>(null);
@@ -56,8 +58,14 @@ function toggleDone(id: number) {
   setTaskList(newList);
   localStorage.setItem('tasks', JSON.stringify(newList)); 
 }
+
+const filteredTasks = useMemo(() => {
+  if (filter === 'done') return taskList.filter(t => t.done);
+  if (filter === 'undone') return taskList.filter(t => !t.done);
+  return taskList;
+}, [taskList, filter]);
   return (
-    <TaskContext.Provider value={{ taskList, filter, setFilter, addTask, deleteTask, toggleDone, editTask }}>
+    <TaskContext.Provider value={{ taskList, filter, setFilter, addTask, deleteTask, toggleDone, editTask, filteredTasks }}>
       {children}
     </TaskContext.Provider>
   );
