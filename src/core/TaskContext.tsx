@@ -1,4 +1,5 @@
-import { createContext, useContext, useState , useMemo} from 'react'
+import { createContext, useContext, useState , useMemo,useReducer, useEffect} from 'react'
+import { todoReducer } from '../reducer/todoReducer';
 
 interface TaskType {
   id: number;
@@ -25,38 +26,35 @@ const TaskContext = createContext<TaskContextType | null>(null);
 
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-        const [taskList, setTaskList] = useState<TaskType[]>(() => {
-        const savedTasks = localStorage.getItem('tasks');
-        return savedTasks ? JSON.parse(savedTasks) : [];
-});
+
+
+      const [taskList, dispatch] = useReducer(todoReducer, [], () => {
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
+
 
 const [filter, setFilter] = useState<FilterType>('all');
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(taskList));
+  }, [taskList]);
+
 function addTask(title: string, body: string) {
-        const newList = [...taskList, { id: taskList.length + 1, title, body, done: false }];
-        setTaskList(newList);
-        localStorage.setItem('tasks', JSON.stringify(newList));
+  dispatch({ type: "ADD_TASK", payload: { title, body } });
 }
 
 function editTask(id: number, title: string, body: string) {
-  const newList = taskList.map(task =>
-    task.id === id ? { ...task, title, body } : task
-  );
-  setTaskList(newList);
-  localStorage.setItem('tasks', JSON.stringify(newList));
+  dispatch({ type: "EDIT_TASK", payload: { id, title, body } });
 }
 
 function deleteTask(id: number) {
-  const newList = taskList.filter(task => task.id !== id);
-  setTaskList(newList);
-  localStorage.setItem('tasks', JSON.stringify(newList)); 
+  dispatch({ type: "DELETE_TASK", payload: { id } });
 }
 
 function toggleDone(id: number) {
-  const newList = taskList.map(task =>
-    task.id === id ? { ...task, done: !task.done } : task
-  );
-  setTaskList(newList);
-  localStorage.setItem('tasks', JSON.stringify(newList)); 
+  dispatch({ type: "TOGGLE_DONE", payload: { id } });
 }
 
 const filteredTasks = useMemo(() => {
@@ -64,6 +62,7 @@ const filteredTasks = useMemo(() => {
   if (filter === 'undone') return taskList.filter(t => !t.done);
   return taskList;
 }, [taskList, filter]);
+
   return (
     <TaskContext.Provider value={{ taskList, filter, setFilter, addTask, deleteTask, toggleDone, editTask, filteredTasks }}>
       {children}
