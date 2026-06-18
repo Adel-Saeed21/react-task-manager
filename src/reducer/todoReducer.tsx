@@ -1,10 +1,4 @@
-
-interface TaskType {
-  id: number;
-  title: string;
-  body: string;
-  done?: boolean;
-}
+import type { TaskType } from "../types/TaskType";   
 type TodoState=TaskType[];
 
 type ActionType =

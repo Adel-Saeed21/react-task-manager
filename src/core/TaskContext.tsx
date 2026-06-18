@@ -1,16 +1,6 @@
 import { createContext, useContext, useState , useMemo,useReducer, useEffect} from 'react'
 import { todoReducer } from '../reducer/todoReducer';
-
-interface TaskType {
-  id: number;
-  title: string;
-  body: string;
-  done?: boolean;
-}
-
-type FilterType = 'all' | 'done' | 'undone';
-
-
+import type { TaskType , FilterType} from '../types/TaskType';
 interface TaskContextType {
         taskList: TaskType[];
         filter: FilterType;
